@@ -183,7 +183,7 @@ class MgMoodle:
                 self._rest_api_parameters(item, prefix.format(key), out_dict)
         return out_dict
 
-    def call(self,accessParams, fname, **kwargs):
+    def _call(self,accessParams, fname, **kwargs):
         """Calls moodle API function with function name fname and keyword arguments.
         Example:
         >>> call_mdl_function('core_course_update_courses',
@@ -207,7 +207,7 @@ class MgMoodle:
         response=[]
         status="error"
         try:
-            response=self.call(self.mWAP,wsfunction,**parameters)
+            response=self._call(self.mWAP,wsfunction,**parameters)
             status='success'
         except Exception as e:
             status = f"Error: {str(e)}"
@@ -544,7 +544,7 @@ class MgMoodle:
         message=status
         try:
             criteria=[{"key":"","value":""}]
-            users=self.call(self.mWAP,'core_user_get_users',criteria=criteria)['users']
+            users=self._call(self.mWAP,'core_user_get_users',criteria=criteria)['users']
             if users:
                 response=[{'label':usr['email'],'value':usr['id']} for usr in users]
             status='success'
@@ -608,9 +608,9 @@ class MgMoodle:
         status='error'
         message=status
         try:
-            usersDict=self.call(self.mWAP,'core_user_get_users',criteria=[{'key':'id','value':userid}])
+            usersDict=self._call(self.mWAP,'core_user_get_users',criteria=[{'key':'id','value':userid}])
             if not usersDict['users'][0]['suspended']:
-                response=[{'value':crs['id'],'label':crs['shortname']} for crs in self.call(self.mWAP,'core_enrol_get_users_courses', userid=userid) if crs['hidden']==hidden]
+                response=[{'value':crs['id'],'label':crs['shortname']} for crs in self._call(self.mWAP,'core_enrol_get_users_courses', userid=userid) if crs['hidden']==hidden]
                 status='success'
             else:
                 response=[]
@@ -672,7 +672,7 @@ class MgMoodle:
         message=status
         try:
             for courseid in courseids:
-                courseUsers=self.call(self.mWAP,'core_enrol_get_enrolled_users',courseid=courseid)
+                courseUsers=self._call(self.mWAP,'core_enrol_get_enrolled_users',courseid=courseid)
                 if len(courseUsers)!=0:
                     labelNames=[dct['username'] for dct in courseUsers]
                     labelNames.sort()
@@ -825,7 +825,7 @@ class MgMoodle:
         data_id=None
         status="error"
         try:
-            response=self.call(self.mWAP,'enrol_manual_enrol_users',enrolments=datadicts)
+            response=self._call(self.mWAP,'enrol_manual_enrol_users',enrolments=datadicts)
             status='success'
             if isinstance(response,list) and response:
                 columns=list(response[0].keys())
@@ -890,7 +890,7 @@ class MgMoodle:
         data_id=None
         status="error"
         try:
-            response=self.call(self.mWAP,'core_role_assign_roles',assignments=datadicts)
+            response=self._call(self.mWAP,'core_role_assign_roles',assignments=datadicts)
             status='success'
             if isinstance(response,list) and response:
                 columns=list(response[0].keys())
@@ -925,7 +925,7 @@ class MgMoodle:
         errors=[]
         for courseid in courseids:
             try:
-                records+=[{'courseid':courseid,'sectionid':secn['id'], 'sectionname':secn['name']} for secn in self.call(self.mWAP,'core_course_get_contents',courseid=courseid) if secn['visible']==secnvisible]             
+                records+=[{'courseid':courseid,'sectionid':secn['id'], 'sectionname':secn['name']} for secn in self._call(self.mWAP,'core_course_get_contents',courseid=courseid) if secn['visible']==secnvisible]             
             except Exception as e:
                 errors.append({'error':str(e)})
             
@@ -988,8 +988,8 @@ class MgMoodle:
         try:
             for courseid in courseids:
                 try:
-                    course_info=self.call(self.mWAP,'core_course_get_courses',options={'ids':[courseid]})
-                    course_content=self.call(self.mWAP,'core_course_get_contents',courseid=courseid)
+                    course_info=self._call(self.mWAP,'core_course_get_courses',options={'ids':[courseid]})
+                    course_content=self._call(self.mWAP,'core_course_get_contents',courseid=courseid)
                     if isinstance(course_info,list) and course_info:
                         course_name=course_info[0].get('displayname','')
                 except Exception as e:
@@ -1037,7 +1037,7 @@ class MgMoodle:
             output={}
             courseinfodict={"courseid":courseid,"categoryid":categoryid,"fullname":fullname,"shortname":shortname}    
             print(courseinfodict)
-            courseinfo=self.call(self.mWAP,'core_course_duplicate_course',**courseinfodict)
+            courseinfo=self._call(self.mWAP,'core_course_duplicate_course',**courseinfodict)
             #output['courseurl']=siteurl+'/course/view.php?id={}'.format(courseinfo['id'])
             status='success'
             response=courseinfo
@@ -1127,7 +1127,7 @@ class MgMoodle:
         response=courses
         status="error"
         try:
-            response=self.call(self.mWAP,'core_course_create_courses',courses=courses)
+            response=self._call(self.mWAP,'core_course_create_courses',courses=courses)
             status='success'
             
             if isinstance(response, list):
@@ -1160,7 +1160,7 @@ class MgMoodle:
         #courseDicts=[]
         courseIDs=[]
         try:
-            response=self.call(self.mWAP,'core_course_delete_courses',courseids=courseids)
+            response=self._call(self.mWAP,'core_course_delete_courses',courseids=courseids)
             status='success'
         except:
             pass
@@ -1213,13 +1213,13 @@ class MgMoodle:
             courseSecnDataDicts=[dct for dct in datadicts if dct['courseid']==courseid]
             parameters={"courseid":courseid,"position":0,"number":len(courseSecnDataDicts)}
             try:
-                createdsections=self.call(self.mWAP,'local_wsmanagesections_create_sections',**parameters)
+                createdsections=self._call(self.mWAP,'local_wsmanagesections_create_sections',**parameters)
                 if len(createdsections)!=0:
                     for iscn,csecn in enumerate(courseSecnDataDicts):
                         sections+=[{"type":"id","section":createdsections[iscn]['sectionid'],"name":csecn['sectionname'],"visible":1}]
                         response+=[{"courseid":courseid,'sectionid':createdsections[iscn]['sectionid'],"name":csecn['sectionname']}]
                     params={"courseid":courseid,"sections":sections}
-                    response2=self.call(self.mWAP,'local_wsmanagesections_update_sections',**params)
+                    response2=self._call(self.mWAP,'local_wsmanagesections_update_sections',**params)
                 meta_data+=[{"courseid":courseid,'sectionid':zz['sectionid'],'sectionnumber':zz['sectionnumber']} for zz in createdsections]
             except Exception as e:
                 errors.append(str(e))
@@ -1248,7 +1248,7 @@ class MgMoodle:
             temp+=[{'courseid':courseid,'sections':[{'type':'id','section':dct['sectionid'],'name':dct['name'],'visible':dct['visible']} for dct in datadicts if dct['courseid']==courseid]}]
         
         for params in temp:
-            response+=[self.call(self.mWAP,'local_wsmanagesections_update_sections',**params)]
+            response+=[self._call(self.mWAP,'local_wsmanagesections_update_sections',**params)]
         print(response)
         status='success'
 
@@ -1266,7 +1266,7 @@ class MgMoodle:
             con=self.engine.connect()
             sectionnumber=read_sql(sql_text("SELECT section FROM mdl_course_sections WHERE id={}".format(sectionid)),con).to_dict(orient='records')[0]['section']
             params={"courseid":courseid,"sectionnumber":sectionnumber,"position":position}
-            response=self.call(self.mWAP,'local_wsmanagesections_move_section',**params)
+            response=self._call(self.mWAP,'local_wsmanagesections_move_section',**params)
             print(response)
             status='success'
         except:
@@ -1279,7 +1279,7 @@ class MgMoodle:
         status='error'
         parameters={"courseid":courseid,"sectionids":sectionids}
         try:
-            response=self.call(self.mWAP,'local_wsmanagesections_delete_sections',**parameters)
+            response=self._call(self.mWAP,'local_wsmanagesections_delete_sections',**parameters)
             status='success'
         except:
             pass
@@ -1311,7 +1311,7 @@ class MgMoodle:
         #courseDicts=[]
         courseIDs=[]
         try:
-            response=self.call(self.mWAP,'core_course_delete_modules',cmids=moduleids)
+            response=self._call(self.mWAP,'core_course_delete_modules',cmids=moduleids)
             status='success'
         except:
             pass
@@ -1353,7 +1353,7 @@ class MgMoodle:
             modules=[{"modulename":modulename,"section":section,"name":title,"description":description,"descriptionformat":1,"visible":visible,"options":options}]
             kwargs={"courseid":courseid,"modules":modules}
             response=kwargs
-            response=self.call(self.mWAP, fname, **kwargs)
+            response=self._call(self.mWAP, fname, **kwargs)
             status="success"
         except:
            pass 
@@ -1403,7 +1403,7 @@ class MgMoodle:
         modules=[{"modulename":modulename,"section":section,"name":title,"description":description,"descriptionformat":1,"visible":visible,"options":options}]
         kwargs={"courseid":courseid,"modules":modules}
         response=kwargs
-        response=self.call(self.mWAP, fname, **kwargs)                         
+        response=self._call(self.mWAP, fname, **kwargs)                         
         return {"status":status,"response":response}
 
     def get_questionnaire_options(self,showdescription=0,opendate=0,closedate=0,qtype=0,cannotchangerespondenttype=0,respondenttype="fullname",
@@ -1673,7 +1673,7 @@ class MgMoodle:
             modules=[{"modulename":modulename,"section":section,"name":name,"description":description,"descriptionformat":1,"visible":visible,"options":options}]
             kwargs={"courseid":courseid,"modules":modules}
             response=kwargs
-            response=self.call(self.mWAP, fname, **kwargs)
+            response=self._call(self.mWAP, fname, **kwargs)
             status='success'
         except Exception as e:
             status=f"Error: {str(e)}" 
