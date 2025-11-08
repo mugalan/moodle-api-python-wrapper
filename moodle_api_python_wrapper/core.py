@@ -691,7 +691,7 @@ class MgMoodle:
         response = {"meta_data": meta_data, "data":data_json, "message":message}
         return {"status": status, "response": response} 
 
-    def get_moodle_system_roles(self, rolename, user_id=None):
+    def _get_moodle_system_roles(self, rolename, user_id=None):
         """
         Retrieves Moodle system role information by shortname.
 
