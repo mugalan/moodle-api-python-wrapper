@@ -23,8 +23,7 @@ dependencies = [
   "scikit-learn>=1.1",
   "networkx>=2.6",
   "pytube>=12",
-  "xmltodict>=0.12",
-  "Django>=3.2"
+  "xmltodict>=0.12"
 ]
 
 # Make Plotly optional (install with: pip install 'moodle-api-python-wrapper[plotting]')
