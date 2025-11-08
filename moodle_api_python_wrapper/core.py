@@ -107,7 +107,7 @@ class MgMoodle:
         status='success'
         return {'status':status,'response':method_dicts}
 
-    def get_sql_request(self,sqlQ, user_id=None):
+    def _get_sql_request(self,sqlQ, user_id=None):
         status='error'
         sql_response=[]
         try:
