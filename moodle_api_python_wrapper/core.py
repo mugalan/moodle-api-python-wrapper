@@ -158,11 +158,11 @@ class MgMoodle:
 #Moodle webservice call
 #######################################
 
-    def rest_api_parameters(self,in_args, prefix='', out_dict=None):
+    def _rest_api_parameters(self,in_args, prefix='', out_dict=None):
         """Transform dictionary/array structure to a flat dictionary, with key names
         defining the structure.
         Example usage:
-        >>> rest_api_parameters({'courses':[{'id':1,'name': 'course1'}]})
+        >>> _rest_api_parameters({'courses':[{'id':1,'name': 'course1'}]})
         {'courses[0][id]':1,
         'courses[0][name]':'course1'}
         """
@@ -177,10 +177,10 @@ class MgMoodle:
             prefix = prefix + '[{0}]'
         if type(in_args)==list:
             for idx, item in enumerate(in_args):
-                self.rest_api_parameters(item, prefix.format(idx), out_dict)
+                self._rest_api_parameters(item, prefix.format(idx), out_dict)
         elif type(in_args)==dict:
             for key, item in in_args.items():
-                self.rest_api_parameters(item, prefix.format(key), out_dict)
+                self._rest_api_parameters(item, prefix.format(key), out_dict)
         return out_dict
 
     def call(self,accessParams, fname, **kwargs):
@@ -189,7 +189,7 @@ class MgMoodle:
         >>> call_mdl_function('core_course_update_courses',
                             courses = [{'id': 1, 'fullname': 'My favorite course'}])
         """
-        parameters = self.rest_api_parameters(kwargs)
+        parameters = self._rest_api_parameters(kwargs)
         parameters.update({"wstoken": accessParams['KEY'], 'moodlewsrestformat': 'json', "wsfunction": fname})
         response = post(accessParams['URL']+accessParams['ENDPOINT'], parameters,verify=False)
         response = response.json()
