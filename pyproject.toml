@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "item-response-prediction"
+version = "0.1.0"
+description = "Adaptive item recommendation and Bayesian ability estimation (2PL & ideal-point) with Bayes/Bandit/Hybrid engines and Plotly visualizations."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [
+  { name = "Mugalan", email = "mugalan@gmail.com" }
+]
+dependencies = [
+  "numpy>=1.21"
+]
+
+# Make Plotly optional (install with: pip install item-response-prediction[plotting])
+[project.optional-dependencies]
+plotting = ["plotly>=5.0"]
+
+[project.urls]
+Repository = "https://github.com/mugalan/item-response-prediction"
+
+[tool.setuptools]
+packages = ["item_response_prediction"]
+
