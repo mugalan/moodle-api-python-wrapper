@@ -20,8 +20,8 @@ import pytz
 import requests
 import sklearn
 import xmltodict
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
+# from django.shortcuts import get_object_or_404
+# from django.urls import reverse
 from pandas import DataFrame, DateOffset, concat, read_sql, to_datetime
 from pytube import YouTube
 from requests import get, post
@@ -2516,99 +2516,99 @@ class MgMoodle:
 
         return {"status":status, "response":response}
 
-    def save_h5p_quiz_from_records(self, quiz_type, title, grade, records, keywords=None, description=None, user_id=None):
-        try:
-            obj, created = MoodleQuizQuestions.objects.update_or_create(
-                title=title,
-                defaults={
-                    "grade": grade,
-                    "quiz_type":quiz_type,
-                    "records": records,
-                    "keywords": keywords or [],
-                    "description": description or ""
-                    # Don't pass "ref" here unless you want to overwrite it on every update ❗
-                }
-            )
+    # def save_h5p_quiz_from_records(self, quiz_type, title, grade, records, keywords=None, description=None, user_id=None):
+    #     try:
+    #         obj, created = MoodleQuizQuestions.objects.update_or_create(
+    #             title=title,
+    #             defaults={
+    #                 "grade": grade,
+    #                 "quiz_type":quiz_type,
+    #                 "records": records,
+    #                 "keywords": keywords or [],
+    #                 "description": description or ""
+    #                 # Don't pass "ref" here unless you want to overwrite it on every update ❗
+    #             }
+    #         )
 
-            # Set ref only if created and it's missing
-            if created and not obj.ref:
-                obj.ref = uuid.uuid4().hex
-                obj.save(update_fields=["ref"])
+    #         # Set ref only if created and it's missing
+    #         if created and not obj.ref:
+    #             obj.ref = uuid.uuid4().hex
+    #             obj.save(update_fields=["ref"])
 
-            status = "success"
-            relative_url=''
-            if obj.quiz_type == QuizChoices.MCQ.value:
-                relative_url = reverse('h5p_mcq_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
-            if obj.quiz_type == QuizChoices.SPEAK_THE_WORD.value:
-                relative_url = reverse('h5p_sw_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
+    #         status = "success"
+    #         relative_url=''
+    #         if obj.quiz_type == QuizChoices.MCQ.value:
+    #             relative_url = reverse('h5p_mcq_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
+    #         if obj.quiz_type == QuizChoices.SPEAK_THE_WORD.value:
+    #             relative_url = reverse('h5p_sw_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
             
-            view_url = f"https://{domain}{relative_url}"
-            meta_data={
-                    "id": obj.id,
-                    "ref": obj.ref,
-                    "url":view_url
-                }
-            response = {
-                "meta_data": meta_data,
-                "data":json.dumps(meta_data),
-                "message": f"The saved quiz can be viewd at: {view_url}"
-            }
+    #         view_url = f"https://{domain}{relative_url}"
+    #         meta_data={
+    #                 "id": obj.id,
+    #                 "ref": obj.ref,
+    #                 "url":view_url
+    #             }
+    #         response = {
+    #             "meta_data": meta_data,
+    #             "data":json.dumps(meta_data),
+    #             "message": f"The saved quiz can be viewd at: {view_url}"
+    #         }
 
-        except Exception as e:
-            status = f"error"
-            response = {
-                "message": str(e)
-            }
+    #     except Exception as e:
+    #         status = f"error"
+    #         response = {
+    #             "message": str(e)
+    #         }
 
-        return {"status": status, "response": response}
+    #     return {"status": status, "response": response}
 
-    def save_h5p_quiz_from_data_id(self, quiz_type, title, grade, data_id, keywords=None, description=None, user_id=None):
-        try:
-            data_id = uuid.UUID(data_id)  # ensure it's a valid UUID
-            saved_data = AiAssistantCallData.objects.get(data_id=data_id)
+    # def save_h5p_quiz_from_data_id(self, quiz_type, title, grade, data_id, keywords=None, description=None, user_id=None):
+    #     try:
+    #         data_id = uuid.UUID(data_id)  # ensure it's a valid UUID
+    #         saved_data = AiAssistantCallData.objects.get(data_id=data_id)
 
-            obj, created = MoodleQuizQuestions.objects.update_or_create(
-                title=title,
-                defaults={
-                    "grade": grade,
-                    "quiz_type":quiz_type,
-                    "records": json.loads(saved_data.records),
-                    "keywords": keywords or [],
-                    "description": description or ""
-                }
-            )
+    #         obj, created = MoodleQuizQuestions.objects.update_or_create(
+    #             title=title,
+    #             defaults={
+    #                 "grade": grade,
+    #                 "quiz_type":quiz_type,
+    #                 "records": json.loads(saved_data.records),
+    #                 "keywords": keywords or [],
+    #                 "description": description or ""
+    #             }
+    #         )
 
-            # Set ref only if created and it's missing
-            if created and not obj.ref:
-                obj.ref = uuid.uuid4()
-                obj.save(update_fields=["ref"])
+    #         # Set ref only if created and it's missing
+    #         if created and not obj.ref:
+    #             obj.ref = uuid.uuid4()
+    #             obj.save(update_fields=["ref"])
 
-            status = "success"
-            relative_url=''
-            if obj.quiz_type == QuizChoices.MCQ.value:
-                relative_url = reverse('h5p_mcq_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
-            if obj.quiz_type == QuizChoices.SPEAK_THE_WORD.value:
-                relative_url = reverse('h5p_sw_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
+    #         status = "success"
+    #         relative_url=''
+    #         if obj.quiz_type == QuizChoices.MCQ.value:
+    #             relative_url = reverse('h5p_mcq_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
+    #         if obj.quiz_type == QuizChoices.SPEAK_THE_WORD.value:
+    #             relative_url = reverse('h5p_sw_quiz', kwargs={'ref': obj.ref})  # or kwargs={'pk': 123}
             
-            view_url = f"https://{domain}{relative_url}"
-            meta_data={
-                    "id": obj.id,
-                    "ref": obj.ref,
-                    "url":view_url
-                }
-            response = {
-                "meta_data": meta_data,
-                "data":json.dumps(meta_data),
-                "message": f"The saved quiz can be viewd at: {view_url}"
-            }
+    #         view_url = f"https://{domain}{relative_url}"
+    #         meta_data={
+    #                 "id": obj.id,
+    #                 "ref": obj.ref,
+    #                 "url":view_url
+    #             }
+    #         response = {
+    #             "meta_data": meta_data,
+    #             "data":json.dumps(meta_data),
+    #             "message": f"The saved quiz can be viewd at: {view_url}"
+    #         }
 
-        except Exception as e:
-            status = f"error"
-            response = {
-                "message": str(e)
-            }
+    #     except Exception as e:
+    #         status = f"error"
+    #         response = {
+    #             "message": str(e)
+    #         }
 
-        return {"status": status, "response": response}
+    #     return {"status": status, "response": response}
 
     def _build_h5p_sw_quiz_json(self, questions, user_id=None):
         base_l10n_question = {
@@ -2735,91 +2735,91 @@ class MgMoodle:
         # Remove zip
         zip_path.unlink()
 
-    def _build_h5p_export_file(self, ref, quiz_type, output_dir="media/exports", user_id=None):
-        """
-        Create a downloadable .h5p export package for a given MoodleQuizQuestions object.
-        """
-        try:
-            quiz_obj = get_object_or_404(MoodleQuizQuestions, ref=ref, quiz_type=quiz_type)
-            records = quiz_obj.records
-            title = quiz_obj.title or "Untitled"
+    # def _build_h5p_export_file(self, ref, quiz_type, output_dir="media/exports", user_id=None):
+    #     """
+    #     Create a downloadable .h5p export package for a given MoodleQuizQuestions object.
+    #     """
+    #     try:
+    #         quiz_obj = get_object_or_404(MoodleQuizQuestions, ref=ref, quiz_type=quiz_type)
+    #         records = quiz_obj.records
+    #         title = quiz_obj.title or "Untitled"
 
-            # 📚 Select appropriate builder and library
-            if quiz_type == QuizChoices.MCQ.value:
-                response = self._build_h5p_mcq_quiz_json(questions=records)
-                main_library = "H5P.MultiChoice"
-                minor_version = 16
-            elif quiz_type == QuizChoices.SPEAK_THE_WORD.value:
-                response = self._build_h5p_sw_quiz_json(questions=records)
-                main_library = "H5P.SpeakTheWords"
-                minor_version = 5
-            else:
-                raise ValueError("Unsupported quiz type")
+    #         # 📚 Select appropriate builder and library
+    #         if quiz_type == QuizChoices.MCQ.value:
+    #             response = self._build_h5p_mcq_quiz_json(questions=records)
+    #             main_library = "H5P.MultiChoice"
+    #             minor_version = 16
+    #         elif quiz_type == QuizChoices.SPEAK_THE_WORD.value:
+    #             response = self._build_h5p_sw_quiz_json(questions=records)
+    #             main_library = "H5P.SpeakTheWords"
+    #             minor_version = 5
+    #         else:
+    #             raise ValueError("Unsupported quiz type")
 
-            quiz_data = response.get("response", {})
+    #         quiz_data = response.get("response", {})
 
-            # 🧱 Build paths
-            quiz_uuid = str(uuid.uuid4())
-            build_dir = Path(output_dir) / f"temp_h5p_{quiz_uuid}"
-            content_dir = build_dir / "content"
-            libraries_dir = build_dir / "libraries"
-            build_dir.mkdir(parents=True, exist_ok=True)
-            content_dir.mkdir(exist_ok=True)
-            libraries_dir.mkdir(exist_ok=True)
+    #         # 🧱 Build paths
+    #         quiz_uuid = str(uuid.uuid4())
+    #         build_dir = Path(output_dir) / f"temp_h5p_{quiz_uuid}"
+    #         content_dir = build_dir / "content"
+    #         libraries_dir = build_dir / "libraries"
+    #         build_dir.mkdir(parents=True, exist_ok=True)
+    #         content_dir.mkdir(exist_ok=True)
+    #         libraries_dir.mkdir(exist_ok=True)
 
-            # 🧠 Write content.json
-            with open(content_dir / "content.json", "w", encoding="utf-8") as f:
-                json.dump(quiz_data, f, indent=2, ensure_ascii=False)
+    #         # 🧠 Write content.json
+    #         with open(content_dir / "content.json", "w", encoding="utf-8") as f:
+    #             json.dump(quiz_data, f, indent=2, ensure_ascii=False)
 
-            # 🧠 Write h5p.json
-            h5p_json = {
-                "title": title,
-                "language": "en",
-                "mainLibrary": main_library,
-                "embedTypes": ["div"],
-                "license": "U",
-                "preloadedDependencies": [
-                    {
-                        "machineName": main_library,
-                        "majorVersion": 1,
-                        "minorVersion": minor_version
-                    }
-                ]
-            }
-            with open(build_dir / "h5p.json", "w", encoding="utf-8") as f:
-                json.dump(h5p_json, f, indent=2)
+    #         # 🧠 Write h5p.json
+    #         h5p_json = {
+    #             "title": title,
+    #             "language": "en",
+    #             "mainLibrary": main_library,
+    #             "embedTypes": ["div"],
+    #             "license": "U",
+    #             "preloadedDependencies": [
+    #                 {
+    #                     "machineName": main_library,
+    #                     "majorVersion": 1,
+    #                     "minorVersion": minor_version
+    #                 }
+    #             ]
+    #         }
+    #         with open(build_dir / "h5p.json", "w", encoding="utf-8") as f:
+    #             json.dump(h5p_json, f, indent=2)
 
-            # 🔽 Download & extract the library
-            self.download_and_extract_library(main_library, minor_version, libraries_dir)
+    #         # 🔽 Download & extract the library
+    #         self.download_and_extract_library(main_library, minor_version, libraries_dir)
 
-            # 🗜️ Zip to .h5p
-            output_path = Path(output_dir) / f"{ref}.h5p"
-            with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-                for root, _, files in os.walk(build_dir):
-                    for file in files:
-                        filepath = Path(root) / file
-                        arcname = filepath.relative_to(build_dir)
-                        zipf.write(filepath, arcname)
+    #         # 🗜️ Zip to .h5p
+    #         output_path = Path(output_dir) / f"{ref}.h5p"
+    #         with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+    #             for root, _, files in os.walk(build_dir):
+    #                 for file in files:
+    #                     filepath = Path(root) / file
+    #                     arcname = filepath.relative_to(build_dir)
+    #                     zipf.write(filepath, arcname)
 
-            # 🧹 Cleanup
-            shutil.rmtree(build_dir)
+    #         # 🧹 Cleanup
+    #         shutil.rmtree(build_dir)
 
-            meta_data = {"filepath": str(output_path)}
-            response = {
-                "meta_data": meta_data,
-                "data": json.dumps(meta_data),
-                "message": f"H5P file generated: {output_path}"
-            }
-            status = "success"
-        except Exception as e:
-            response = {
-                "meta_data": {},
-                "data": json.dumps({}),
-                "message": f"H5P generation error: {str(e)}"
-            }
-            status = f"error: {str(e)}"
+    #         meta_data = {"filepath": str(output_path)}
+    #         response = {
+    #             "meta_data": meta_data,
+    #             "data": json.dumps(meta_data),
+    #             "message": f"H5P file generated: {output_path}"
+    #         }
+    #         status = "success"
+    #     except Exception as e:
+    #         response = {
+    #             "meta_data": {},
+    #             "data": json.dumps({}),
+    #             "message": f"H5P generation error: {str(e)}"
+    #         }
+    #         status = f"error: {str(e)}"
 
-        return {"status": status, "response": response}
+    #     return {"status": status, "response": response}
 
 ##########################################
 
