@@ -347,7 +347,7 @@ class MgMoodle:
         response = {"meta_data": meta_data, "data":data_json, "message":message}
         return {"status": status, "response": response} 
 
-    def get_user_category_instances_by_role(self, userid, rolename, user_id=None):
+    def _get_user_category_instances_by_role(self, userid, rolename, user_id=None):
         response=[]
         status='error'
         self.engine.dispose()
@@ -392,7 +392,7 @@ class MgMoodle:
                 - `get_user_context_instance_roles`
                 - `get_category_list`
                 - `get_user_context_instances`
-                - `get_user_category_instances_by_role`
+                - `_get_user_category_instances_by_role`
 
         Example:
             >>> get_user_category_list(42)
@@ -421,7 +421,7 @@ class MgMoodle:
                 if 'manager' in [dct['rolename'] for dct in categoryinstances]:
                     role='categorymanager'
                 data={'userid':userid,'rolename':'manager'}
-                categorylist=self.get_user_category_instances_by_role(**data)['response']
+                categorylist=self._get_user_category_instances_by_role(**data)['response']
             status='success'
             message=status
         except:
