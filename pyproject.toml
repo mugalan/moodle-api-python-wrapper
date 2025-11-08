@@ -3,9 +3,9 @@ requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "item-response-prediction"
+name = "moodle-api-python-wrapper"
 version = "0.1.0"
-description = "Adaptive item recommendation and Bayesian ability estimation (2PL & ideal-point) with Bayes/Bandit/Hybrid engines and Plotly visualizations."
+description = ""
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.9"
@@ -16,13 +16,13 @@ dependencies = [
   "numpy>=1.21"
 ]
 
-# Make Plotly optional (install with: pip install item-response-prediction[plotting])
+# Make Plotly optional (install with: pip install moodle-api-python-wrapper[plotting])
 [project.optional-dependencies]
 plotting = ["plotly>=5.0"]
 
 [project.urls]
-Repository = "https://github.com/mugalan/item-response-prediction"
+Repository = "https://github.com/mugalan/moodle-api-python-wrapper"
 
 [tool.setuptools]
-packages = ["item_response_prediction"]
+packages = ["moodle_api_python_wrapper"]
 
