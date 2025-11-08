@@ -1,42 +1,41 @@
-import numpy as np
+# Standard library
+import copy
 import itertools
 import json
-import copy
-import inspect
-import plotly.graph_objects as go
-import plotly.express as px
-import plotly.io as pio
-import networkx as nx
-import requests
-from requests import get, post
-from pandas import DataFrame, to_datetime, concat, DateOffset, read_sql
-from sqlalchemy import text as sql_text
-from sqlalchemy.exc import SQLAlchemyError
-import time
-import uuid
-from datetime import datetime
-import pytz
-from urllib3.exceptions import InsecureRequestWarning
-from urllib3 import disable_warnings
-disable_warnings(InsecureRequestWarning)
-
-import sklearn
-from sklearn.mixture import GaussianMixture
-
-
-from pytube import YouTube
-from pathlib import Path
 import os
 import re
-import sys
-import xmltodict
-
-import zipfile
 import shutil
+import sys
+import time
+import uuid
+import zipfile
+from datetime import datetime
+from pathlib import Path
+from typing import Optional
+
+# Third-party
+import networkx as nx
+import numpy as np
+import pytz
+import requests
+import sklearn
+import xmltodict
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from pandas import DataFrame, DateOffset, concat, read_sql, to_datetime
+from pytube import YouTube
+from requests import get, post
+from sklearn.mixture import GaussianMixture
+from sqlalchemy import create_engine, text as sql_text
+from sqlalchemy.exc import SQLAlchemyError
+from urllib3 import disable_warnings
+from urllib3.exceptions import InsecureRequestWarning
 
+# Plotly
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
 
-from sqlalchemy import create_engine
 
 
 mcq_templatemoduleid=36
