@@ -2358,7 +2358,7 @@ class MgMoodle:
 
 ##########################################################################
 
-    def build_h5p_mcq_quiz_json(self,questions, user_id=None):
+    def _build_h5p_mcq_quiz_json(self,questions, user_id=None):
         questions_input=questions
         base_ui = {
             "checkAnswerButton": "Check",
@@ -2610,7 +2610,7 @@ class MgMoodle:
 
         return {"status": status, "response": response}
 
-    def build_h5p_sw_quiz_json(self, questions, user_id=None):
+    def _build_h5p_sw_quiz_json(self, questions, user_id=None):
         base_l10n_question = {
             "retryLabel": "Retry",
             "showSolutionLabel": "Show solution",
@@ -2735,7 +2735,7 @@ class MgMoodle:
         # Remove zip
         zip_path.unlink()
 
-    def build_h5p_export_file(self, ref, quiz_type, output_dir="media/exports", user_id=None):
+    def _build_h5p_export_file(self, ref, quiz_type, output_dir="media/exports", user_id=None):
         """
         Create a downloadable .h5p export package for a given MoodleQuizQuestions object.
         """
@@ -2746,11 +2746,11 @@ class MgMoodle:
 
             # 📚 Select appropriate builder and library
             if quiz_type == QuizChoices.MCQ.value:
-                response = self.build_h5p_mcq_quiz_json(questions=records)
+                response = self._build_h5p_mcq_quiz_json(questions=records)
                 main_library = "H5P.MultiChoice"
                 minor_version = 16
             elif quiz_type == QuizChoices.SPEAK_THE_WORD.value:
-                response = self.build_h5p_sw_quiz_json(questions=records)
+                response = self._build_h5p_sw_quiz_json(questions=records)
                 main_library = "H5P.SpeakTheWords"
                 minor_version = 5
             else:
