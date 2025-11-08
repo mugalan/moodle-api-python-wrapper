@@ -13,10 +13,21 @@ authors = [
   { name = "Mugalan", email = "mugalan@gmail.com" }
 ]
 dependencies = [
-  "numpy>=1.21"
+  "numpy>=1.21",
+  "pandas>=1.5",
+  "requests>=2.28",
+  "urllib3>=1.26",
+  "SQLAlchemy>=1.4",
+  "mysql-connector-python>=8.0",
+  "pytz>=2021.1",
+  "scikit-learn>=1.1",
+  "networkx>=2.6",
+  "pytube>=12",
+  "xmltodict>=0.12",
+  "Django>=3.2"
 ]
 
-# Make Plotly optional (install with: pip install moodle-api-python-wrapper[plotting])
+# Make Plotly optional (install with: pip install 'moodle-api-python-wrapper[plotting]')
 [project.optional-dependencies]
 plotting = ["plotly>=5.0"]
 
@@ -25,4 +36,3 @@ Repository = "https://github.com/mugalan/moodle-api-python-wrapper"
 
 [tool.setuptools]
 packages = ["moodle_api_python_wrapper"]
-
