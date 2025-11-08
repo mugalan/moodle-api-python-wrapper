@@ -35,25 +35,34 @@ import zipfile
 import shutil
 from django.shortcuts import get_object_or_404
 
-try:
-    from utilities.project_variables import moodleURL
-except:
-    moodleURL=''
 
-from utilities.project_variables import end_point, domain
-from lmsApp.models import MoodleQuizQuestions, QuizChoices
-from aiApp.models import AiAssistantCallData
-from django.urls import reverse
+from sqlalchemy import create_engine
+
 
 mcq_templatemoduleid=36
 sw_templatemoduleid=39
 demo_courseid=56
 demo_sectionid=379
 
+
+def _make_moodle_engine(moodle_db) -> Optional[object]:
+    """Create engine lazily; no work at import time."""
+    if 'moodle_db' not in globals():
+        return None
+    cfg = moodle_db.get('moodle') if isinstance(moodle_db, dict) else None
+    if not cfg:
+        return None
+    url = f"mysql+mysqlconnector://{cfg['USER']}:{cfg['PASSWORD']}@{cfg['HOST']}/{cfg['NAME']}"
+    engine = create_engine(url, pool_pre_ping=True)
+    # no test connect() here; let first usage trigger connect
+    return engine
+
+
+
 class MgMoodle:
-    def __init__(self,mWAParams,SQLengine):
+    def __init__(self,mWAParams,moodle_db):
         self.mWAP=mWAParams
-        self.engine=SQLengine
+        self.engine=_make_moodle_engine(moodle_db) 
         self.hvp_local_methods={}
         self.hvp_local_methods['update_hvp_MCQ_questions']=self.update_hvp_MCQ_questions
         self.hvp_local_methods['update_hvp_SW']=self.update_hvp_SW
@@ -98,21 +107,6 @@ class MgMoodle:
             method_dicts+= [{"method": name, "signature":str(signature), "description": formatted_docstring}]
         status='success'
         return {'status':status,'response':method_dicts}
-
-    def get_methods_list(self, user_id=None):
-        response=[{"label":n, "value":json.dumps({ky:"<>" for ky in str(inspect.signature(v)).split(')')[0].split('(')[-1].split(',')})} for n,v in inspect.getmembers(self, inspect.ismethod)]
-        status='success'
-        return {'status':status,'response':response}
-
-    def get_methods_list_without_arguments(self, user_id=None):
-        response=[{"label":n, "value":n} for n,v in inspect.getmembers(self, inspect.ismethod)]
-        status='success'
-        return {'status':status,'response':response}        
-
-    def get_method_signature(self,methodname, user_id=None):
-        response=[{"label":n, "value":json.dumps({ky:"<>" for ky in str(inspect.signature(v)).split(')')[0].split('(')[-1].split(',')})} for n,v in inspect.getmembers(self, inspect.ismethod) if n==methodname]
-        status='success'
-        return {'status':status,'response':response}
 
     def get_sql_request(self,sqlQ, user_id=None):
         status='error'
