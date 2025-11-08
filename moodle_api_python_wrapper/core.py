@@ -748,7 +748,7 @@ class MgMoodle:
         response = {"meta_data": meta_data, "data":data_json, "message":message}
         return {"status": status, "response": response} 
 
-    def get_instance_contextid(self,contextlevel,instanceid, user_id=None):
+    def _get_instance_contextid(self,contextlevel,instanceid, user_id=None):
         response=None
         status='error'
         self.engine.dispose()
