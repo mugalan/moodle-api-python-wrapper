@@ -428,7 +428,7 @@ class MgMoodle:
             pass
         return {'status':status,'response':{'categorylist':categorylist,'rolename':role}}
     
-    def get_categories_course_info(self,categoryids=None, user_id=None):
+    def _get_categories_course_info(self,categoryids=None, user_id=None):
         """
         Retrieves course information for one or more given course categories.
 
@@ -460,7 +460,7 @@ class MgMoodle:
             - Uses `tuple(categoryids + [-1])` to safely handle single-element lists in SQL IN clause.
 
         Example:
-            >>> get_categories_course_info([3, 5])
+            >>> _get_categories_course_info([3, 5])
             {
                 'status': 'success',
                 'response': {
