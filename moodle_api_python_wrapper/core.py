@@ -1325,19 +1325,19 @@ class MgMoodle:
             optionsDict={}
 
         if modulename=="questionnaire":
-            options=self.get_questionnaire_options(**optionsDict)
+            options=self._get_questionnaire_options(**optionsDict)
         elif modulename=="assign":
-            options=self.get_assign_options(**optionsDict)
+            options=self._get_assign_options(**optionsDict)
         elif modulename=="forum":
-            options=self.get_forum_options(**optionsDict)
+            options=self._get_forum_options(**optionsDict)
         elif modulename=="schedulerr":
-            options=self.get_scheduler_options(**optionsDict)
+            options=self._get_scheduler_options(**optionsDict)
         elif modulename=="resource":
-            options=self.get_resource_options(**optionsDict)
+            options=self._get_resource_options(**optionsDict)
         elif modulename=="quiz":
-            options=self.get_quiz_options(**optionsDict)
+            options=self._get_quiz_options(**optionsDict)
         elif modulename=="hvp":
-            options=self.get_hvp_options(templateModuleid,**optionsDict)
+            options=self._get_hvp_options(templateModuleid,**optionsDict)
         else:
             options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]
         
@@ -1383,17 +1383,17 @@ class MgMoodle:
             description=modInfo['intro'].to_list()[0]    
 
         if modulename=="questionnaire":
-            options=self.get_questionnaire_options(**optionsDict)
+            options=self._get_questionnaire_options(**optionsDict)
         elif modulename=="assign":
-            options=self.get_assign_options(**optionsDict)
+            options=self._get_assign_options(**optionsDict)
         elif modulename=="forum":
-            options=self.get_forum_options(**optionsDict)
+            options=self._get_forum_options(**optionsDict)
         elif modulename=="scheduler":
-            options=self.get_scheduler_options(**optionsDict)
+            options=self._get_scheduler_options(**optionsDict)
         elif modulename=="resource":
-            options=self.get_resource_options(**optionsDict)
+            options=self._get_resource_options(**optionsDict)
         elif modulename=="hvp":
-            options=self.get_hvp_options(templateModuleid,**optionsDict)
+            options=self._get_hvp_options(templateModuleid,**optionsDict)
         else:
             options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]
         response=options
@@ -1406,7 +1406,7 @@ class MgMoodle:
         response=self._call(self.mWAP, fname, **kwargs)                         
         return {"status":status,"response":response}
 
-    def get_questionnaire_options(self,showdescription=0,opendate=0,closedate=0,qtype=0,cannotchangerespondenttype=0,respondenttype="fullname",
+    def _get_questionnaire_options(self,showdescription=0,opendate=0,closedate=0,qtype=0,cannotchangerespondenttype=0,respondenttype="fullname",
                                 resp_view=1,notifications=0,resume=0,navigate=0,autonum=3,progressbar=0,grade=0,
                                 completionunlocked=1,completion=2,completionview=0,completionpass=0,completionexpected=0,completionsubmit=1, user_id=None):
         optionsDict={"showdescription":showdescription,
@@ -1430,7 +1430,7 @@ class MgMoodle:
         options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]
         return options
 
-    def get_quiz_options(self,showdescription = 1, intro="", introformat=1,
+    def _get_quiz_options(self,showdescription = 1, intro="", introformat=1,
             timeopen=0,timeclose = 0,timelimit = 0, overduehandling = "autosubmit",graceperiod = 0,
             gradecat = 35,grade = 10, gradepass = 0, attempts = 0,grademethod = 1,
             questionsperpage = 1,navmethod = "free",shuffleanswers = 1,preferredbehaviour = "deferredfeedback",canredoquestions = 0,attemptonlast = 0,
@@ -1449,7 +1449,7 @@ class MgMoodle:
         options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]
         return options
 
-    def get_forum_options(self,showdescription=0,type="general", duedate=0, cutoffdate=0, maxbytes=512000, 
+    def _get_forum_options(self,showdescription=0,type="general", duedate=0, cutoffdate=0, maxbytes=512000, 
                         maxattachments=9, displaywordcount=0, forcesubscribe=0, trackingtype=1, 
                         lockdiscussionafter=0, blockperiod=0, blockafter=0, warnafter=0, grade_forum=0, 
                         assessed=0, scale=100, gradepass=0,
@@ -1467,7 +1467,7 @@ class MgMoodle:
         options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]
         return options
 
-    def get_assign_options(self,showdescription=1,allowsubmissionsfromdate=0, duedate=0, cutoffdate=0, gradingduedate=0, 
+    def _get_assign_options(self,showdescription=1,allowsubmissionsfromdate=0, duedate=0, cutoffdate=0, gradingduedate=0, 
                         assignsubmission_onlinetext_enabled=1, assignsubmission_file_enabled=1, 
                         assignsubmission_comments_enabled=1, assignsubmission_file_maxfiles=20, 
                         assignsubmission_file_maxsizebytes=0, assignfeedback_comments_enabled=1, 
@@ -1504,7 +1504,7 @@ class MgMoodle:
         options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]        
         return options   
 
-    def get_scheduler_options(self,showdescription=0,mform_isexpanded_id_optionhdr=1,staffrolename="Facilitator", maxbookings=10, schedulermode="oneonly", 
+    def _get_scheduler_options(self,showdescription=0,mform_isexpanded_id_optionhdr=1,staffrolename="Facilitator", maxbookings=10, schedulermode="oneonly", 
                                 bookingrouping=-1, guardtime=0, defaultslotduration=60, allownotifications=0, 
                                 usenotes=1, grade=0, usebookingform=0, usestudentnotes=0, uploadmaxfiles=0, requireupload=0,
                                 completionunlocked=1,completion=0,completionview=0,completionpass=0,completionexpected=0, user_id=None):
@@ -1520,14 +1520,14 @@ class MgMoodle:
         options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]        
         return options   
         
-    def get_resource_options(self,showdescription=0,display=0,popupwidth=620, popupheight=450, printintro=1,filterfiles= 0,
+    def _get_resource_options(self,showdescription=0,display=0,popupwidth=620, popupheight=450, printintro=1,filterfiles= 0,
                             completionunlocked=1,completion=2,completionview=1,completionpass=0,completionexpected=0, user_id=None):
         optionsDict={"showdescription":showdescription,"display":display,"popupwidth":popupwidth,"popupheight":popupheight,"printintro":printintro,"filterfiles":filterfiles,
                     "completionunlocked":completionunlocked,"completion":completion,"completionview":completionview,"completionpass":completionpass,"completionexpected":completionexpected}
         options=[{"name":ky, "value":optionsDict[ky]} for ky in [*optionsDict]]        
         return options
 
-    def get_hvp_options(self,moduleid,showdescription=0, h5paction="create", h5pmaxscore=0, gradecat=5, maximumgrade=10,
+    def _get_hvp_options(self,moduleid,showdescription=0, h5paction="create", h5pmaxscore=0, gradecat=5, maximumgrade=10,
                         completionunlocked=1,completion=2,completionview=1,completionusegrade=1,completionpass=0,completionexpected=0,params=None, user_id=None):
         paramsOld, title, machine_name, libraryid=self.get_hvp_template_content_moodle(moduleid)
         if params==None:
