@@ -362,7 +362,7 @@ class MgMoodle:
         con.close()
         return {'status':status,'response':response}
 
-    def get_user_category_list(self,userid, user_id=None):
+    def _get_user_category_list(self,userid, user_id=None):
         """
         Retrieves a list of course categories accessible to a user based on their role.
 
@@ -395,7 +395,7 @@ class MgMoodle:
                 - `_get_user_category_instances_by_role`
 
         Example:
-            >>> get_user_category_list(42)
+            >>> _get_user_category_list(42)
             {
                 'status': 'success',
                 'response': {
